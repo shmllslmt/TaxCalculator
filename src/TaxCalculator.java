@@ -1,4 +1,4 @@
-public abstract class TaxCalculator {
+public class TaxCalculator {
     private String name;
     private double annualIncome;
     public TaxCalculator() {
@@ -25,5 +25,5 @@ public abstract class TaxCalculator {
         return name;
     }
 
-    public abstract double calculateTax();
+    public double calculateTax() { return 0; }
 }

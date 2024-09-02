@@ -1,36 +1,27 @@
-import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        TaxCalculator payer;
         Scanner input = new Scanner(System.in);
 
-        System.out.print("What is your name? ");
-        String name = input.nextLine();
+        System.out.print("How much did you earn in a month? ");
+        double monthlyIncome = input.nextDouble();
+        double annualIncome = monthlyIncome * 12;
 
-        System.out.print("How much do you earn annually? ");
-        double income = input.nextDouble();
+        ProgressiveTaxCalculator progressive = new ProgressiveTaxCalculator("Alex", annualIncome);
 
-        System.out.print("Are you single (1) or married (2)? ");
-        int category = input.nextInt();
+        progressive.addBracket(new TaxBracket(0, 5000, 0, 0));
+        progressive.addBracket(new TaxBracket(5000, 20000, 0.01, 0));
+        progressive.addBracket(new TaxBracket(20000, 35000, 0.03, 150));
+        progressive.addBracket(new TaxBracket(35000, 50000, 0.06, 600));
+        progressive.addBracket(new TaxBracket(50000, 70000, 0.11, 1500));
+        progressive.addBracket(new TaxBracket(70000, 100000, 0.19, 3700));
+        progressive.addBracket(new TaxBracket(100000, 400000, 0.25, 9400));
+        progressive.addBracket(new TaxBracket(400000, 600000, 0.26, 84400));
+        progressive.addBracket(new TaxBracket(600000, 2000000, 0.28, 136400));
+        progressive.addBracket(new TaxBracket(2000000, 999999999, 0.30, 528400));
 
-        if(category == 1) {
-            System.out.print("How many people is depending on you? ");
-            int dependent = input.nextInt();
-
-            payer = new SingleTaxPayer(name, income, dependent);
-        } else {
-            System.out.print("How much do your spouse earn annually? ");
-            double spouseIncome = input.nextDouble();
-
-            payer = new MarriedTaxPayer(name, income, spouseIncome);
-        }
-
-        System.out.println("Name: " + payer.getName());
-        System.out.println("Annual Income: " + payer.getAnnualIncome());
-        if(payer instanceof SingleTaxPayer)
-            System.out.println("Number of Dependents: " + ((SingleTaxPayer)payer).getNumberOfDependents());
-        System.out.println("Income Tax: " + payer.calculateTax());
+        System.out.println(progressive.getName() + " earns " + progressive.getAnnualIncome() + " per year.");
+        System.out.println(progressive.getName() + " needs to pay " + progressive.calculateTax() + " in tax.");
     }
 }
